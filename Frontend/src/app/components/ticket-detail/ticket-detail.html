@@ -1,0 +1,81 @@
+<div *ngIf="isLoading" class="loading">
+    Loading ticket details...
+  </div>
+  
+  <div *ngIf="errorMessage" class="error">
+    {{ errorMessage }}
+  </div>
+  
+  <div *ngIf="ticket && !isLoading" class="ticket-container">
+    <div class="header">
+      <h1>{{ ticket.title }}</h1>
+      <div class="actions">
+        <button (click)="navigateToTicketList()" class="btn back-btn">Back to List</button>
+      </div>
+    </div>
+  
+    <div class="ticket-details">
+      <div class="detail-row">
+        <label>Status:</label>
+        <div class="status-control">
+          <select [formControl]="statusForm" [disabled]="isUpdatingStatus">
+            <option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
+          </select>
+          <button 
+            (click)="updateStatus()" 
+            [disabled]="statusForm.invalid || isUpdatingStatus"
+            class="btn update-btn"
+          >
+            <span *ngIf="!isUpdatingStatus">Update Status</span>
+            <span *ngIf="isUpdatingStatus">Updating...</span>
+          </button>
+        </div>
+      </div>
+  
+      <div class="detail-row">
+        <label>Created:</label>
+        <span>{{ ticket.createdAt | date:'medium' }}</span>
+      </div>
+  
+      <div class="detail-row">
+        <label>Description:</label>
+        <p>{{ ticket.description }}</p>
+      </div>
+    </div>
+  
+    <div class="comments-section">
+      <h2>Comments</h2>
+      
+      <div *ngIf="ticket.comments && ticket.comments.length > 0" class="comments-list">
+        <div *ngFor="let comment of ticket.comments" class="comment">
+          <div class="comment-header">
+            <span class="comment-date">{{ comment.createdAt | date:'medium' }}</span>
+          </div>
+          <p class="comment-text">{{ comment.text }}</p>
+        </div>
+      </div>
+  
+      <div *ngIf="!ticket.comments || ticket.comments.length === 0" class="no-comments">
+        No comments yet. Be the first to add one!
+      </div>
+  
+      <div class="add-comment">
+        <textarea 
+          [formControl]="commentForm" 
+          placeholder="Add a comment..."
+          rows="3"
+        ></textarea>
+        <div *ngIf="commentForm.invalid && commentForm.touched" class="error">
+          Comment is required
+        </div>
+        <button 
+          (click)="addComment()" 
+          [disabled]="commentForm.invalid || isAddingComment"
+          class="btn add-btn"
+        >
+          <span *ngIf="!isAddingComment">Add Comment</span>
+          <span *ngIf="isAddingComment">Adding...</span>
+        </button>
+      </div>
+    </div>
+  </div>

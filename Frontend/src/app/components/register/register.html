@@ -1,0 +1,83 @@
+<!-- register.component.html -->
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="username">Username</label>
+      <input 
+        type="text" 
+        id="username" 
+        formControlName="username"
+      >
+      @if (registerForm.get('username')?.invalid && registerForm.get('username')?.touched) {
+        <div>
+          @if (registerForm.get('username')?.hasError('required')) {
+            <span>Username is required</span>
+          }
+          @if (registerForm.get('username')?.hasError('minlength')) {
+            <span>Username must be at least 3 characters</span>
+          }
+        </div>
+      }
+    </div>
+  
+    <div>
+      <label for="email">Email</label>
+      <input 
+        type="email" 
+        id="email" 
+        formControlName="email"
+      >
+      @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+        <div>
+          @if (registerForm.get('email')?.hasError('required')) {
+            <span>Email is required</span>
+          }
+          @if (registerForm.get('email')?.hasError('email')) {
+            <span>Invalid email format</span>
+          }
+        </div>
+      }
+    </div>
+  
+    <div>
+      <label for="password">Password</label>
+      <input 
+        type="password" 
+        id="password" 
+        formControlName="password"
+      >
+      @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+        <div>
+          @if (registerForm.get('password')?.hasError('required')) {
+            <span>Password is required</span>
+          }
+          @if (registerForm.get('password')?.hasError('minlength')) {
+            <span>Password must be at least 6 characters</span>
+          }
+        </div>
+      }
+    </div>
+  
+    @if (errorMessage) {
+      <div class="error">
+        {{ errorMessage }}
+      </div>
+    }
+  
+    @if (successMessage) {
+      <div class="success">
+        {{ successMessage }}
+      </div>
+    }
+  
+    <button 
+      type="submit" 
+      [disabled]="registerForm.invalid || isLoading"
+    >
+      @if (!isLoading) {
+        <span>Register</span>
+      }
+      @if (isLoading) {
+        <span>Registering...</span>
+      }
+    </button>
+  </form>

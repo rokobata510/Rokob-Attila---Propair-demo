@@ -1,0 +1,63 @@
+<div class="header">
+    <h1>Ticket List</h1>
+    <div>
+        <button routerLink="/tickets/create" class="btn create-btn">Create New Ticket</button>
+        <button (click)="logout()" class="btn logout-btn">Logout</button>
+    </div>
+</div>
+
+<div *ngIf="isLoading" class="loading">
+    Loading tickets...
+</div>
+
+<div *ngIf="errorMessage" class="error">
+    {{ errorMessage }}
+</div>
+
+<table *ngIf="!isLoading && tickets.length > 0">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Description</th>
+            <th>Created At</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let ticket of tickets">
+            <td>{{ ticket.title }}</td>
+            <td>
+                <!-- Status dropdown -->
+                <div class="status-selector">
+                    <select 
+                        [value]="ticket.status"
+                        (change)="updateStatus(ticket._id, $any($event.target).value)"
+                        [disabled]="updatingStatus[ticket._id]"
+                    >
+                        <option *ngFor="let status of statusOptions" 
+                                [value]="status"
+                                [selected]="status === ticket.status">
+                            {{ status }}
+                        </option>
+                    </select>
+                    <span *ngIf="updatingStatus[ticket._id]" class="updating-spinner">
+                        Updating...
+                    </span>
+                </div>
+                <div *ngIf="updateErrors[ticket._id]" class="error">
+                    {{ updateErrors[ticket._id] }}
+                </div>
+            </td>
+            <td class="description">{{ ticket.description }}</td>
+            <td>{{ ticket.createdAt | date:'medium' }}</td>
+            <td class="actions">
+                <button [routerLink]="['/tickets', ticket._id]" class="btn view-btn">View</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<div *ngIf="!isLoading && tickets.length === 0" class="no-tickets">
+    No tickets found. <a routerLink="/tickets/create">Create your first ticket</a>
+</div>

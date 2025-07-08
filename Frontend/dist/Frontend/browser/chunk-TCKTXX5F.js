@@ -1,0 +1,1 @@
+import{Ba as c,pa as i,ya as s,za as n}from"./chunk-A3XFVUKG.js";var o=class e{static \u0275fac=function(t){return new(t||e)};static \u0275cmp=i({type:e,selectors:[["app-ticket-list"]],decls:2,vars:0,template:function(t,p){t&1&&(s(0,"p"),c(1,"ticket-list works!"),n())},encapsulation:2})};export{o as TicketList};

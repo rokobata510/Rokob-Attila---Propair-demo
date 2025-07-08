@@ -1,0 +1,99 @@
+<form [formGroup]="ticketForm" (ngSubmit)="onSubmit()">
+  <div>
+    <label for="title">Title</label>
+    <div class="input-group">
+      <input 
+        type="text" 
+        id="title" 
+        formControlName="title"
+        [class.invalid]="ticketForm.get('title')?.invalid && (ticketForm.get('title')?.touched || ticketForm.get('title')?.dirty)"
+      >
+      <button 
+        type="button" 
+        class="suggest-btn"
+        (click)="onSuggestTitle()"
+        [disabled]="isSuggesting || !ticketForm.get('description')?.value || ticketForm.get('description')?.value.length < 10"
+      >
+        <span *ngIf="!isSuggesting">Suggest Title</span>
+        <span *ngIf="isSuggesting">Generating...</span>
+      </button>
+    </div>
+    <div *ngIf="ticketForm.get('title')?.hasError('required') && (ticketForm.get('title')?.touched || ticketForm.get('title')?.dirty)">
+      Title is required
+    </div>
+    <div *ngIf="ticketForm.get('title')?.hasError('minlength') && (ticketForm.get('title')?.touched || ticketForm.get('title')?.dirty)">
+      Title must be at least 3 characters
+    </div>
+    <div *ngIf="suggestionError" class="error">
+      {{ suggestionError }}
+    </div>
+  </div>
+
+  <div>
+    <label for="status">Status</label>
+    <select 
+      id="status" 
+      formControlName="status"
+      [class.invalid]="ticketForm.get('status')?.invalid && (ticketForm.get('status')?.touched || ticketForm.get('status')?.dirty)"
+    >
+      <option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
+    </select>
+    <div *ngIf="ticketForm.get('status')?.hasError('required') && (ticketForm.get('status')?.touched || ticketForm.get('status')?.dirty)">
+      Status is required
+    </div>
+  </div>
+
+  <div>
+    <label for="description">Description</label>
+    <textarea 
+      id="description" 
+      formControlName="description"
+      rows="4"
+      [class.invalid]="ticketForm.get('description')?.invalid && (ticketForm.get('description')?.touched || ticketForm.get('description')?.dirty)"
+    ></textarea>
+    <div *ngIf="ticketForm.get('description')?.hasError('required') && (ticketForm.get('description')?.touched || ticketForm.get('description')?.dirty)">
+      Description is required
+    </div>
+    <div *ngIf="ticketForm.get('description')?.hasError('minlength') && (ticketForm.get('description')?.touched || ticketForm.get('description')?.dirty)">
+      Description must be at least 10 characters
+    </div>
+  </div>
+
+  <div *ngIf="errorMessage" class="error">
+    {{ errorMessage }}
+  </div>
+
+  <button 
+    type="submit" 
+    [disabled]="ticketForm.invalid || isLoading"
+  >
+    <span *ngIf="!isLoading">Create Ticket</span>
+    <span *ngIf="isLoading">Creating...</span>
+  </button>
+</form>
+
+<style>
+.input-group {
+  display: flex;
+  gap: 10px;
+}
+
+.suggest-btn {
+  white-space: nowrap;
+  padding: 0 15px;
+  background-color: #e0e0e0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.suggest-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error {
+  color: #d32f2f;
+  margin: 8px 0;
+}
+</style>
